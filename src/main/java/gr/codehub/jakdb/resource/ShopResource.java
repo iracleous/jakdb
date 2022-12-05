@@ -3,6 +3,8 @@ package gr.codehub.jakdb.resource;
 import gr.codehub.jakdb.dto.CustomerDto;
 import gr.codehub.jakdb.dto.OrderDto;
 import gr.codehub.jakdb.service.ShopService;
+import jakarta.annotation.security.PermitAll;
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
@@ -19,12 +21,23 @@ public class ShopResource {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
+    @PermitAll
+    public String home() {
+        return "This is a stakeholder";
+    }
+
+    @GET
+    @Path("/customer")
+    @RolesAllowed("ADMIN")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
     public List<CustomerDto> readAll() {
         return shopService.read();
     }
 
     @GET
-    @Path("/{customerId}")
+    @Path("/customer/{customerId}")
+    @RolesAllowed("ADMIN")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     public CustomerDto readOne(@PathParam("customerId") int customerId) {
@@ -34,6 +47,8 @@ public class ShopResource {
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
+    @Path("/customer")
+    @RolesAllowed("ADMIN")
     public CustomerDto insert(CustomerDto customer) {
         return shopService.create(customer);
     }
@@ -41,11 +56,14 @@ public class ShopResource {
 
     @POST
     @Path("/order/{customerId}")
+    @RolesAllowed("ADMIN")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     public OrderDto createOrder(@PathParam("customerId") Long customerId){
         return shopService.createOrder(customerId);
     }
+
+
 
 
 }
