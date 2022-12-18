@@ -28,7 +28,7 @@ public class ShopResource {
 
     @GET
     @Path("/customer")
-    @RolesAllowed("ADMIN")
+    @RolesAllowed({"ADMIN","USER"})
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     public List<CustomerDto> readAll() {
@@ -37,7 +37,7 @@ public class ShopResource {
 
     @GET
     @Path("/customer/{customerId}")
-    @RolesAllowed("ADMIN")
+    @RolesAllowed({"ADMIN","USER"})
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     public CustomerDto readOne(@PathParam("customerId") int customerId) {
@@ -48,22 +48,17 @@ public class ShopResource {
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/customer")
-    @RolesAllowed("ADMIN")
+    @RolesAllowed({"ADMIN","USER"})
     public CustomerDto insert(CustomerDto customer) {
         return shopService.create(customer);
     }
 
-
     @POST
     @Path("/order/{customerId}")
-    @RolesAllowed("ADMIN")
+    @RolesAllowed({"ADMIN","USER"})
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public OrderDto createOrder(@PathParam("customerId") Long customerId){
+    public OrderDto createOrder(@PathParam("customerId") Long customerId) {
         return shopService.createOrder(customerId);
     }
-
-
-
-
 }

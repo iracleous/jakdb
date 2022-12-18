@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Jakarta Eshop Client</title>
+
+    <style>
+        #navigationMenu{
+            text-align: center;
+            justify-content: center
+        }
+        ul {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+        }
+
+        li {
+            float: left;
+        }
+
+        li a {
+            display: block;
+            padding: 8px;
+            background-color: #dddddd;
+        }
+    </style>
+
+
+</head>
+<body>
+<div id="navigationMenu" >
+    <ul>
+        <li><a href="#" onclick="indexPage()">Home</a></li>
+        <li><a href="#" onclick="listCustomers()">List customers</a></li>
+        <li><a href="#" onclick="findCustomerById()">Find customer by id</a></li>
+        <li><a href="#" onclick="addCustomer()">Add a customer</a></li>
+        <li><a href="#" onclick="deleteCustomer()">Delete a customer</a></li>
+        <li><a href="#"  onclick="aboutPage()">About</a></li>
+    </ul>
+</div>
+<br> <br>
+
+<div id="inputForm" ></div>
+<!-- This is the area of the data from the back-end system -->
+<div id="results"> Home page. Codehub.gr!</div>
+</body>
+
+
+<script>
+
+function indexPage(){
+    document.getElementById("inputForm").innerHTML="";
+    document.getElementById("results").innerHTML="Home page. Codehub.gr!";
+}
+function listCustomers() {
+    document.getElementById("results").innerHTML="";
+    document.getElementById("inputForm").innerHTML = `
+    <form>
+        <h2>Credentials</h2><br>
+        username <input type="text" id="username" placeholder="username" value="admin"><br>
+        password <input type="text" id="password" placeholder="password" value="password"><br><br>
+        <input type="button" value="get Customers" onclick="doListCustomers()">
+    </form>
+    <br><br><br>
+    `;
+
+}
+
+function doListCustomers() {
+   var url = "http://localhost:8080/jakdb-1.0-SNAPSHOT/api/shop/customer";
+
+// Creating Our XMLHttpRequest object
+    var xhr = new XMLHttpRequest();
+    xhr.open("GET", url, true);
+
+    username = document.getElementById("username").value;
+    password = document.getElementById("password").value;
+
+    xhr.setRequestHeader('Authorization', 'Basic ' + btoa(username + ":" + password));
+    xhr.setRequestHeader('Content-Type', 'application/json');
+    // function execute after request is successful
+    xhr.onreadystatechange = function () {
+        if (this.readyState == 4 && this.status == 200) {
+            document.getElementById("results").innerHTML =  "JSON= " + this.responseText + "<br><br>";
+            customers = JSON.parse(this.responseText);
+            let txt = "<table border='1'>";
+            customers.forEach(
+                function (value, index, array) {
+                    txt += "<tr><td>"+  value.name + "</td><td>"+  value.emailAddress+ "</td><td> "+  value.birthYear+  "</td></tr>";
+                });
+            txt += "</table>";
+            document.getElementById("results").innerHTML = document.getElementById("results").innerHTML+txt;
+        };
+    }
+    // Sending our request
+    xhr.send();
+}
+
+function addCustomer(){
+    document.getElementById("results").innerHTML="";
+    document.getElementById("inputForm").innerHTML = `
+    <form>
+        <h2>Credentials</h2><br>
+        username <input type="text" id="username" placeholder="username" value="admin"><br>
+        password <input type="text" id="password" placeholder="password" value="password"><br><br>
+        <h2>Customer data</h2><br>
+
+        customer name <input type="text" id="customerName" placeholder="customerName"  ><br>
+        email Address <input type="text" id="emailAddress" placeholder="emailAddress"  ><br><br>
+        birth Year <input type="text" id="birthYear" placeholder="birthYear"  ><br><br>
+        <input type="button" value="add customer" onclick="doAddCustomer()"><br>
+        <input type="button" value="add customer 2" onclick="doAddCustomerUsingFetch()"><br>
+    </form>
+    <br><br><br>
+    `;
+}
+
+function doAddCustomer(){
+
+    var url = "http://localhost:8080/jakdb-1.0-SNAPSHOT/api/shop/customer";
+    data = `{
+      "name": "` + document.getElementById("customerName").value + `",
+      "emailAddress":  "` + document.getElementById("emailAddress").value + `",
+      "birthYear":  ` + document.getElementById("birthYear").value + `
+    }`;
+
+// Creating Our XMLHttpRequest object
+    var xhr = new XMLHttpRequest();
+    xhr.open("POST", url, false);
+
+    username = document.getElementById("username").value;
+    password = document.getElementById("password").value;
+
+    xhr.setRequestHeader('Authorization', 'Basic ' + btoa(username + ":" + password));
+    xhr.setRequestHeader('Content-Type', 'application/json');
+    xhr.setRequestHeader("Accept", "application/json");
+    // function execute after request is successful
+    xhr.onreadystatechange = function () {
+        if (this.readyState == 4 && this.status == 200) {
+            document.getElementById("results").innerHTML =this.responseText;
+        }
+    };
+    // Sending our request
+    xhr.send(data);
+}
+
+function doAddCustomerUsingFetch(){
+
+}
+
+
+function findCustomerById(){
+    document.getElementById("results").innerHTML="";
+    document.getElementById("inputForm").innerHTML = `
+    <form>
+        <h2>Credentials</h2><br>
+        username <input type="text" id="username" placeholder="username" value="admin"><br>
+        password <input type="text" id="password" placeholder="password" value="password"><br><br>
+        <h2>Customer data</h2><br>
+
+        customer id <input type="text" id="customerId" placeholder="customerId"  ><br>
+         <input type="button" value="find customer" onclick="doFindCustomerById()"><br>
+     </form>
+    <br><br><br>
+    `;
+}
+
+function doFindCustomerById() {
+    var url = "http://localhost:8080/jakdb-1.0-SNAPSHOT/api/shop/customer/" + document.getElementById("customerId").value;
+
+// Creating Our XMLHttpRequest object
+    var xhr = new XMLHttpRequest();
+    xhr.open("GET", url, true);
+
+    username = document.getElementById("username").value;
+    password = document.getElementById("password").value;
+
+    xhr.setRequestHeader('Authorization', 'Basic ' + btoa(username + ":" + password));
+    xhr.setRequestHeader('Content-Type', 'application/json');
+    // function execute after request is successful
+    xhr.onreadystatechange = function () {
+        if (this.readyState == 4 && this.status == 200) {
+            document.getElementById("results").innerHTML =  "JSON= " + this.responseText + "<br><br>";
+            customer = JSON.parse(this.responseText);
+            let txt = "<table border='1'>";
+
+             txt += "<tr><td>"+  customer.name + "</td><td>"+  customer.emailAddress+ "</td><td> "+  customer.birthYear+  "</td></tr>";
+
+            txt += "</table>";
+            document.getElementById("results").innerHTML = document.getElementById("results").innerHTML+txt;
+        };
+    }
+    // Sending our request
+    xhr.send();
+}
+</script>
+
+</html>

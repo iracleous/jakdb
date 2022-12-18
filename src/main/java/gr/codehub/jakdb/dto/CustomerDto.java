@@ -1,5 +1,7 @@
 package gr.codehub.jakdb.dto;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import gr.codehub.jakdb.model.Customer;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -13,6 +15,8 @@ public class CustomerDto {
     private String name;
     private String emailAddress;
     private int birthYear;
+    @JsonSerialize(using = gr.codehub.jakdb.serializers.LocalDateTimeSerializer.class)
+    @JsonDeserialize(using = gr.codehub.jakdb.serializers.LocalDateTimeDeserializer.class)
     private LocalDateTime registrationDate;
 
     public CustomerDto(Customer customer) {

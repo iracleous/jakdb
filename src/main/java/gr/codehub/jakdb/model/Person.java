@@ -1,5 +1,8 @@
 package gr.codehub.jakdb.model;
 
+
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import jakarta.persistence.Column;
 import jakarta.persistence.MappedSuperclass;
 import lombok.Data;
@@ -13,5 +16,6 @@ public class Person extends BaseEntity {
     @Column(unique = true)
     private String emailAddress;
     private int birthYear;
+
     private LocalDateTime registrationDate;
 }
