@@ -12,11 +12,14 @@ public class CorsFilter implements ContainerResponseFilter {
 
     @Override
     public void filter(ContainerRequestContext requestContext,
-                       ContainerResponseContext responseContext ) throws IOException {
-        responseContext.getHeaders().add("Access-Control-Allow-Origin", "*");
+            ContainerResponseContext responseContext) throws IOException {
+        //change to angular url and port only
+        responseContext.getHeaders().add("Access-Control-Allow-Origin", "http://localhost:4200");
         responseContext.getHeaders().add("Access-Control-Allow-Credentials", "true");
-        responseContext.getHeaders().add("Access-Control-Allow-Methods", "POST, GET, PUT, OPTIONS, DELETE");
-        responseContext.getHeaders().add("Access-Control-Allow-Headers", "username, password, X-Requested-With, Content-Type, Authorization, Origin, Accept, Access-Control-Request-Method, Access-Control-Request-Headers");
+        responseContext.getHeaders().add("Access-Control-Allow-Methods", "POST, GET, PUΤ, DELETE, PATCH, OPTIONS");
+        responseContext.getHeaders().add("Access-Control-Allow-Headers", "username, crossdomain, password, X-Requested-With, Content-Type, Authorization, Origin, Accept, Access-Control-Request-Method, Access-Control-Request-Headers");
         responseContext.getHeaders().add("Access-Control-Max-Age", "1209600");
+        
+        
     }
 }
