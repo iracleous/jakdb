@@ -6,6 +6,7 @@ import lombok.Data;
 @Data
 @Entity
 public class AppUser extends BaseEntity {
+
     private String username;
     private String password;
     private String role;

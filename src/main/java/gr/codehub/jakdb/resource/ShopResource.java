@@ -2,15 +2,18 @@ package gr.codehub.jakdb.resource;
 
 import gr.codehub.jakdb.dto.CustomerDto;
 import gr.codehub.jakdb.dto.OrderDto;
+import gr.codehub.jakdb.model.AppUser;
+import gr.codehub.jakdb.repository.AppUserRepository;
 import gr.codehub.jakdb.service.ShopService;
 import jakarta.annotation.security.PermitAll;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
+import java.util.Base64;
 
 import java.util.List;
-
+import java.util.StringTokenizer;
 
 @Path("/shop")
 public class ShopResource {
@@ -18,6 +21,10 @@ public class ShopResource {
     @Inject
     private ShopService shopService;
 
+    @Inject
+    private AppUserRepository appUserRepository;
+    
+    
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
@@ -28,7 +35,7 @@ public class ShopResource {
 
     @GET
     @Path("/customer")
-    @RolesAllowed({"ADMIN","USER"})
+    @RolesAllowed({"ADMIN", "USER"})
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     public List<CustomerDto> readAll() {
@@ -37,7 +44,7 @@ public class ShopResource {
 
     @GET
     @Path("/customer/{customerId}")
-    @RolesAllowed({"ADMIN","USER"})
+    @RolesAllowed({"ADMIN", "USER"})
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     public CustomerDto readOne(@PathParam("customerId") int customerId) {
@@ -48,17 +55,39 @@ public class ShopResource {
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/customer")
-    @RolesAllowed({"ADMIN","USER"})
+    @RolesAllowed({"ADMIN", "USER"})
     public CustomerDto insert(CustomerDto customer) {
         return shopService.create(customer);
     }
 
     @POST
     @Path("/order/{customerId}")
-    @RolesAllowed({"ADMIN","USER"})
+    @RolesAllowed({"ADMIN", "USER"})
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     public OrderDto createOrder(@PathParam("customerId") Long customerId) {
         return shopService.createOrder(customerId);
     }
-}
+    
+    @POST
+    @Path("/login")
+     @RolesAllowed({"ADMIN", "USER"})
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public AppUser getUser(@HeaderParam("Authorization") String authorization){
+        
+        final String encodedUserPassword = authorization.replaceFirst("Basic" + " ", "");
+            //Decode username and password
+        String usernameAndPassword = new String(Base64.getDecoder().decode(encodedUserPassword.getBytes()));
+
+        //Split username and password tokens
+        final StringTokenizer tokenizer = new StringTokenizer(usernameAndPassword, ":");
+        final String username = tokenizer.nextToken();
+        final String password = tokenizer.nextToken();
+        
+        AppUser appUser = appUserRepository.findByUserameAndPass(username,password);
+        
+        return appUser;
+    }
+
+    }

@@ -11,6 +11,7 @@ import java.util.List;
 @Data
 @Entity
 public class Order extends BaseEntity {
+
     private LocalDateTime date;
     @OneToMany(mappedBy = "order")
     private List<OrderDetail> orderDetails;

@@ -18,6 +18,7 @@ import java.util.*;
 
 @Provider
 public class AuthenticationFilter implements ContainerRequestFilter {
+
     private static final String AUTHORIZATION_PROPERTY = "Authorization";
     private static final String AUTHENTICATION_SCHEME = "Basic";
     @Inject

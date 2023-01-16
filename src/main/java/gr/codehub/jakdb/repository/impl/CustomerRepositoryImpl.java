@@ -21,8 +21,7 @@ public class CustomerRepositoryImpl extends RepositoryImpl<Customer, Long> imple
     @Override
     public List<Order> findOrdersByCustomer(long customerId) {
 
-
-        return em.createQuery("Select o from Customer c join Order o where c.id=:id")
-                .setParameter("id",customerId ).getResultList();
+        return em.createQuery("SElect o from Customer c join Order o where c.id=:id")
+                .setParameter("id", customerId).getResultList();
     }
 }

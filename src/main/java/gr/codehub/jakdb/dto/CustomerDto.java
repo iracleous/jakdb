@@ -11,6 +11,7 @@ import java.time.LocalDateTime;
 @Data
 @NoArgsConstructor
 public class CustomerDto {
+
     private long id;
     private String name;
     private String emailAddress;
