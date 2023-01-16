@@ -21,8 +21,7 @@ public class ShopResource {
     @Inject
     private ShopService shopService;
 
-    @Inject
-    private AppUserRepository appUserRepository;
+ 
     
     
     @GET
@@ -75,19 +74,7 @@ public class ShopResource {
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     public AppUser getUser(@HeaderParam("Authorization") String authorization){
-        
-        final String encodedUserPassword = authorization.replaceFirst("Basic" + " ", "");
-            //Decode username and password
-        String usernameAndPassword = new String(Base64.getDecoder().decode(encodedUserPassword.getBytes()));
-
-        //Split username and password tokens
-        final StringTokenizer tokenizer = new StringTokenizer(usernameAndPassword, ":");
-        final String username = tokenizer.nextToken();
-        final String password = tokenizer.nextToken();
-        
-        AppUser appUser = appUserRepository.findByUserameAndPass(username,password);
-        
-        return appUser;
+        return shopService.getUser(authorization);
     }
 
-    }
+}
